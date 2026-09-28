@@ -85,7 +85,7 @@ def graficos_632():
     cv = cv[cv.llamadas % paso == 0]          # descarta puntos sin checkpoint comun
 
     medidas = {
-        "tiempo": ("tiempo_ns", 1e6, "Tiempo acumulado en decreaseKey (ms)"),
+        "tiempo": ("tiempo_ns", 1e6, "Tiempo acumulado (ms)"),
         "operaciones": ("operaciones", 1, None),
     }
 
@@ -95,8 +95,14 @@ def graficos_632():
             for cola in COLAS:
                 sub = cv[(cv.cola == cola) & (cv.serie == serie)]
                 curvas = {}
+                #for (i, j), g in sub.groupby(["i", "j"]):
+                #    m = g.groupby("llamadas")[col].mean() / esc
+                #    curvas[(i, j)] = m
                 for (i, j), g in sub.groupby(["i", "j"]):
-                    m = g.groupby("llamadas")[col].mean() / esc
+                    por_k = g.groupby("llamadas")[col]
+                    m = por_k.mean() / esc
+                    cuenta = por_k.count()
+                    m = m[cuenta == cuenta.max()]   # solo checkpoints alcanzados por TODAS las semillas
                     curvas[(i, j)] = m
                 datos[cola] = curvas
             if not any(datos[c] for c in COLAS):
@@ -134,7 +140,7 @@ def graficos_632():
                 plt.plot([], [], "k--", label=f"Cota x c (c = {cs[cola]:.2e})")
                 plt.xlim(0, xmax * 1.02)
                 plt.ylim(0, ymax * 1.1)
-                plt.xlabel("Llamadas a decreaseKey")
+                plt.xlabel(r"$k$ = Llamadas a decreaseKey") #<--
                 plt.ylabel(yl)
                 cota = "k log v" if cola == "binomial" else "k"
                 plt.title(f"6.3.2  {NOMBRE[cola]}  -  Serie {serie}  ({medida})\n"
