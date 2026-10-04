@@ -12,7 +12,7 @@
 // Salida (CSV en la carpeta actual):
 //   resultados_631.csv, tabla_631.csv,
 //   resultados_632.csv, curvas_632.csv, verificacion.csv
-// Los graficos se generan luego con:  python3 graficar.py
+// Los graficos se generan luego con:  python graficar.py
 // ============================================================
 #include <iostream>
 #include <fstream>
@@ -227,6 +227,6 @@ int main(int argc, char* argv[]) {
         cout << "ATENCION: " << fallos << " ejecuciones con pesos distintos "
                 "(ver verificacion.csv)\n";
 
-    cout << "\nListo. Ahora ejecuta:  python3 graficar.py\n";
+    cout << "\nListo. Ahora ejecuta:  python graficar.py\n";
     return 0;
 }
